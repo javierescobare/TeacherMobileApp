@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TeacherMobileApp.Views.MasterPageMaster"
+             Title="Master">
+    <Grid RowSpacing="0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="192" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="1" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Grid BackgroundColor="{StaticResource colorPrimaryDark}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="56"/>
+            </Grid.RowDefinitions>
+            <Image Grid.Row="0"
+                   Source="student.ico"
+                   VerticalOptions="End"
+                   HorizontalOptions="Start"
+                   HeightRequest="120"
+                   Aspect="AspectFit"
+                   Margin="16,40,0,4"/>
+            <StackLayout Grid.Row="1"
+                         Spacing="0"
+                         Margin="16,0">
+                <Label Text="Adrian Babá"
+                       FontSize="16"
+                       TextColor="White" />
+                <Label Text="amontalvo@gmail.com"
+                       TextColor="LightGray"
+                       FontSize="14" />
+            </StackLayout>
+        </Grid>
+
+        <!-- Content -->
+        <ListView x:Name="MenuItemsListView"
+                  SeparatorVisibility="None"
+                  HasUnevenRows="true"
+                  ItemsSource="{Binding MenuItems}"
+                  Margin="0,8"
+                  Grid.Row="1">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <StackLayout Orientation="Horizontal" Padding="16,10" HorizontalOptions="FillAndExpand" Spacing="0">
+                            <Image Source="{Binding IconPath}" WidthRequest="24" HeightRequest="24" Margin="0,0,32,0"/>
+                            <Label Style="{StaticResource NavigationItemText}"
+                                   VerticalOptions="FillAndExpand" 
+                                   VerticalTextAlignment="Center" 
+                                   Text="{Binding Title}" />
+                        </StackLayout>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <BoxView HeightRequest="1" BackgroundColor="LightGray" Grid.Row="2"/>
+        <Label x:Name="SignOutText"
+               Margin="40,14,16,14"
+               Style="{StaticResource NavigationItemText}"
+               VerticalOptions="End" 
+               VerticalTextAlignment="Center" 
+               Text="Cerrar sesión" 
+               FontSize="16"
+               Grid.Row="3"/>
+    </Grid>
+</ContentPage>

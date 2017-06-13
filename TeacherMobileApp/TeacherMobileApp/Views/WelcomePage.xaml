@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TeacherMobileApp.Views.WelcomePage"
+             Title="Inicio">
+    <ContentPage.Content>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Label Margin="0,30,0,0"
+                   Text="¡Bienvenido, Adrián!" 
+                   HorizontalOptions="Center"
+                   FontFamily="{StaticResource MediumFontFamily}"
+                   TextColor="{StaticResource HeaderTextColor}"
+                   FontSize="24"/>
+            <ListView x:Name="ClassesLvw"
+                      HasUnevenRows="True"
+                      SeparatorVisibility="None"
+                      Grid.Row="1"
+                      ItemTapped="ClassesLvw_ItemSelected">
+                <ListView.Header>
+                    <Label Text="Próximas clases" FontFamily="{StaticResource RegularFontFamily}" Margin="16,4,16,4" FontSize="16"/>
+                </ListView.Header>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Frame Margin="8,4,8,4" HasShadow="True">
+                                <Grid RowSpacing="0">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="2*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Label Text="{Binding CourseName}" Grid.ColumnSpan="2" Style="{StaticResource Header}" FontSize="20"/>
+                                    <Label Text="{Binding Schedules}" Grid.Row="1" Style="{StaticResource Content}" />
+                                    <Label Text="{Binding Teacher.SurName}" Grid.Row="1" Grid.Column="1" Style="{StaticResource Content}" TextColor="{StaticResource HeaderTextColor}" HorizontalTextAlignment="End"/>
+                                </Grid>
+                            </Frame>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <Label x:Name="NoClassesLabel" Text="Aún no tienes clases programadas." VerticalOptions="Center" HorizontalOptions="Center" FontSize="18" Grid.Row="1" FontFamily="{StaticResource LightFontFamily}" HorizontalTextAlignment="Center" Margin="30,0" WidthRequest="120"/>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

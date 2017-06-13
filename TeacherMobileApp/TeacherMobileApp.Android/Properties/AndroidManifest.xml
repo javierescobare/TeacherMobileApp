@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:installLocation="auto" android:versionCode="1" android:versionName="1.0" package="com.javdev.yoprofe">
+	<uses-sdk android:minSdkVersion="15" />
+	<application android:label="Yo Profe" android:icon="@drawable/logo">
+    <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyCHXZ-fN-QoeT14788l5vDeT316fEz8yeM" />
+    <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
+  </application>
+</manifest>

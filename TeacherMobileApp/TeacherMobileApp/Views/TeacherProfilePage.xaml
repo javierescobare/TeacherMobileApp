@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TeacherMobileApp.Views.TeacherProfilePage"
+             Title="Perfil de docente">
+    <ContentPage.Content>
+        <ScrollView>
+            <StackLayout Padding="16,20,16,0">
+                <Label Text="{Binding FullName}" 
+                       HorizontalTextAlignment="Center" 
+                       FontFamily="{StaticResource MediumFontFamily}"
+                       TextColor="{StaticResource HeaderTextColor}"
+                       FontSize="24"/>
+                <Image Source="teacher.png" HorizontalOptions="Center" Margin="0,8"/>
+                <Label Text="{Binding Description}" HorizontalTextAlignment="Center" FontFamily="{StaticResource LightFontFamily}" Margin="0,0,0,20"/>
+                <Label Text="Horarios disponibles" Style="{StaticResource Header}"/>
+                <Label Text="Lunes 4:00 pm - 5:00 pm, Lunes 5:30 pm - 6:30 pm, Viernes 2:00 pm - 3:00 pm, Viernes 3:00 pm - 4:00 pm" />
+                <Label Text="Tarifa" Style="{StaticResource Header}" Margin="0,10,0,0"/>
+                <Label Text="S/ 20 por hora" />
+                <Button Text="Llamar" 
+                        Clicked="CallButton_Clicked"
+                        BackgroundColor="{StaticResource colorPrimary}"
+                        TextColor="White"/>
+                <Button Text="Ver antecedentes" 
+                        Clicked="DownloadPdf_Clicked"
+                        BackgroundColor="{StaticResource colorPrimary}"
+                        TextColor="White"
+                        IsVisible="{Binding Unemployed}"/>
+                <Button Text="Contratar" 
+                        Command="{Binding Contract}"
+                        BackgroundColor="{StaticResource colorPrimaryDark}"
+                        TextColor="White"
+                        IsVisible="{Binding Unemployed}"/>
+            </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

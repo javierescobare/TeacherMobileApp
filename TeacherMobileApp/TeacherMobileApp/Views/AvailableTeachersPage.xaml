@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TeacherMobileApp.Views.AvailableTeachersPage">
+    <ListView ItemsSource="{Binding Teachers}"
+              ItemTapped="Handle_ItemTapped"
+              CachingStrategy="RecycleElement"
+              SeparatorVisibility="None"
+              HasUnevenRows="True"
+              Margin="0,8">
+        <ListView.ItemTemplate>
+            <DataTemplate>
+                <ViewCell>
+                    <Grid ColumnSpacing="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="72" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Image Source="teacher.png" HorizontalOptions="Start" Margin="16,10,0,10" HeightRequest="36" WidthRequest="36" Aspect="AspectFit" />
+                        <Label Grid.Column="1" Text="{Binding FullName}" Style="{StaticResource SimpleLineListItem}" />
+                    </Grid>
+                </ViewCell>
+            </DataTemplate>
+        </ListView.ItemTemplate>
+    </ListView>
+</ContentPage>

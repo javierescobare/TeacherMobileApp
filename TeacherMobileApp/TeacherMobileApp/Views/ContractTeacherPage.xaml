@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TeacherMobileApp.Views.ContractTeacherPage"
+             Title="Contrato">
+    <ContentPage.Content>
+        <ScrollView>
+            <Frame Margin="8,8,8,20" Padding="16" HasShadow="True">
+                <StackLayout Spacing="0">
+                    <Label Text="Información de contrato" 
+                           FontFamily="{StaticResource MediumFontFamily}"
+                           TextColor="{StaticResource HeaderTextColor}"
+                           FontSize="24"/>
+                    
+                    <Label Text="Docente" 
+                           Style="{StaticResource Header}" 
+                           Margin="0,14,0,0"/>
+                    
+                    <Label Text="{Binding Teacher.FullName}" 
+                           Style="{StaticResource Content}"/>
+
+                    <Grid Margin="0,16,0,0" RowSpacing="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        
+                        <Label Text="Horarios seleccionados" Style="{StaticResource Header}" VerticalOptions="Center" />
+                        <Button Text="Seleccionar" Grid.Column="1" Command="{Binding PickSchedules}"/>
+                    </Grid>
+                    
+                    <Label Text="{Binding SchedulesOutput, Mode=TwoWay}" 
+                           Style="{StaticResource Content}"/>
+
+                    <Grid Margin="0,16,0,0" RowSpacing="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Label Text="Dirección" Style="{StaticResource Header}" VerticalOptions="Center" />
+                        <Button Text="Seleccionar" Grid.Column="1" Command="{Binding GetLocation}"/>
+                    </Grid>
+                    
+                    <Label Text="{Binding Location, Mode=TwoWay}" 
+                           Style="{StaticResource Content}" 
+                           Margin="0,0,0,4"/>
+                    
+                    <Image x:Name="LocationImage" 
+                           Aspect="AspectFill" 
+                           HeightRequest="200" 
+                           IsVisible="False" />
+
+                    <BoxView HeightRequest="1" 
+                             BackgroundColor="LightGray" 
+                             Margin="0,40,0,0"/>
+                    
+                    <Label Text="Total" 
+                           Style="{StaticResource Header}" 
+                           Margin="0,8,0,0" 
+                           HorizontalTextAlignment="End"/>
+                    
+                    <Label Text="{Binding Total, StringFormat='S/ {0}'}" 
+                           Style="{StaticResource Content}" 
+                           FontSize="28" 
+                           HorizontalTextAlignment="End"/>
+                    
+                    <Button Text="Aceptar" 
+                            Clicked="NextClick" 
+                            BackgroundColor="{StaticResource colorPrimary}"
+                            TextColor="White"
+                            Margin="0,12,0,0"/>
+                    
+                    <Label Text="Al dar clic en Aceptar también estará aceptando los términos y condiciones de la aplicación." />
+                </StackLayout>
+            </Frame>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>
