@@ -8,4 +8,4 @@ Uses a custom map to detect touches and snapshot. Is also uses a custom renderer
 
 ### Plugins used
 - [UserDialogs](https://github.com/aritchie/userdialogs)
-- [Settings] (https://github.com/jamesmontemagno/SettingsPlugin)
+- [Settings](https://github.com/jamesmontemagno/SettingsPlugin)
