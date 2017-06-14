@@ -27,7 +27,7 @@
                         TextColor="White"
                         IsVisible="{Binding Unemployed}"/>
                 <Button Text="Contratar" 
-                        Command="{Binding Contract}"
+                        Clicked="Button_Clicked"
                         BackgroundColor="{StaticResource colorPrimaryDark}"
                         TextColor="White"
                         IsVisible="{Binding Unemployed}"/>
