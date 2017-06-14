@@ -1,5 +1,4 @@
 ﻿using Android.Gms.Maps;
-using System;
 using TeacherMobileApp.Controls;
 using TeacherMobileApp.Droid.Controls;
 using Xamarin.Forms;
@@ -9,30 +8,58 @@ using Xamarin.Forms.Platform.Android;
 using Android.Graphics;
 using System.Threading.Tasks;
 using System.IO;
+using System.ComponentModel;
 
 [assembly: ExportRenderer(typeof(ExtendedMap), typeof(ExtendedMapRenderer))]
 namespace TeacherMobileApp.Droid.Controls
 {
-    public class ExtendedMapRenderer : MapRenderer, IOnMapReadyCallback, GoogleMap.ISnapshotReadyCallback
+    public class ExtendedMapRenderer : MapRenderer, GoogleMap.ISnapshotReadyCallback
     {
-        private GoogleMap _map;
         private byte[] _snapShot;
+        private bool _mapReady;
+        private bool _isDrawn;
 
-        public void OnMapReady(GoogleMap googleMap)
+
+        protected override void OnElementChanged(ElementChangedEventArgs<Map> e)
         {
-            InvokeOnMapReadyBaseClassHack(googleMap);
-            _map = googleMap;
-            if (_map != null)
-                _map.MapClick += GoogleMap_MapClick;
+            if (NativeMap != null)
+                NativeMap.MapClick -= GoogleMap_MapClick;
+
+            base.OnElementChanged(e);
+        }
+
+        protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            base.OnElementPropertyChanged(sender, e);
+
+            if (e.PropertyName.Equals("VisibleRegion") && !_isDrawn)
+            {
+                _isDrawn = true;
+                OnGoogleMapReady();
+            }
+        }
+
+        private void OnGoogleMapReady()
+        {
+            if (_mapReady) return;
+
+            NativeMap.MapClick += GoogleMap_MapClick;
             ((ExtendedMap)Element).Snapshot = GetSnapshot;
+
+            _mapReady = true;
+        }
+
+        private void GoogleMap_MapClick(object sender, GoogleMap.MapClickEventArgs e)
+        {
+            ((ExtendedMap)Element).OnTap(new Position(e.Point.Latitude, e.Point.Longitude));
         }
 
         public async Task<byte[]> GetSnapshot()
         {
-            if (_map == null) return null;
+            if (NativeMap == null) return null;
 
             _snapShot = null;
-            _map.Snapshot(this);
+            NativeMap.Snapshot(this);
 
             while (_snapShot == null) await Task.Delay(10);
 
@@ -45,57 +72,6 @@ namespace TeacherMobileApp.Droid.Controls
             {
                 snapshot.Compress(Bitmap.CompressFormat.Png, 100, strm);
                 this._snapShot = strm.ToArray();
-            }
-        }
-
-        protected override void OnElementChanged(ElementChangedEventArgs<Map> e)
-        {
-            if (_map != null)
-                _map.MapClick -= GoogleMap_MapClick;
-
-            base.OnElementChanged(e);
-
-            Control?.GetMapAsync(this);
-        }
-
-        private void GoogleMap_MapClick(object sender, GoogleMap.MapClickEventArgs e)
-        {
-            ((ExtendedMap)Element).OnTap(new Position(e.Point.Latitude, e.Point.Longitude));
-        }
-
-
-        //  Hack to make IOnMapReadyCallback work correctly after updating Maps nuget
-        private void InvokeOnMapReadyBaseClassHack(GoogleMap googleMap)
-        {
-            System.Reflection.MethodInfo onMapReadyMethodInfo = null;
-
-            Type baseType = typeof(MapRenderer);
-            foreach (var currentMethod in baseType.GetMethods(System.Reflection.BindingFlags.NonPublic |
-                                                             System.Reflection.BindingFlags.Instance |
-                                                              System.Reflection.BindingFlags.DeclaredOnly))
-            {
-
-                if (currentMethod.IsFinal && currentMethod.IsPrivate)
-                {
-                    if (string.Equals(currentMethod.Name, "OnMapReady", StringComparison.Ordinal))
-                    {
-                        onMapReadyMethodInfo = currentMethod;
-
-                        break;
-                    }
-
-                    if (currentMethod.Name.EndsWith(".OnMapReady", StringComparison.Ordinal))
-                    {
-                        onMapReadyMethodInfo = currentMethod;
-
-                        break;
-                    }
-                }
-            }
-
-            if (onMapReadyMethodInfo != null)
-            {
-                onMapReadyMethodInfo.Invoke(this, new[] { googleMap });
             }
         }
     }
