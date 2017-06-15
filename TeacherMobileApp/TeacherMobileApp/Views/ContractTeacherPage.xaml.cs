@@ -43,24 +43,6 @@ namespace TeacherMobileApp.Views
                 LocationImage.IsVisible = true;
                 await viewModel.GetAddressForActualPositionAsync();
             }
-        }     
-
-        private async void NextClick(object sender, EventArgs e)
-        {
-            if (viewModel.NoSchedules)
-            {
-                await DisplayAlert("Un momento", "Debes seleccionar por lo menos un horario para la atención.", "OK");
-                return;
-            }
-
-            var accepted = await DisplayAlert("Atención", "¿Estás seguro de proceder con la solicitud?", "Sí", "Cancelar");
-            if (!accepted)
-                return;
-
-            viewModel.Teacher.Unemployed = false;
-            App.Classes.Add(new Class() { CourseName = BaseViewModel.Course.Name, Teacher = viewModel.Teacher, Schedules = viewModel.SchedulesOutput });
-
-            viewModel.NavigateToPageCurrent(new ShellPage());
         }
 
     }
