@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Diagnostics;
 using TeacherMobileApp.Models;
 using TeacherMobileApp.ViewModels;
 using Xamarin.Forms;
@@ -9,20 +10,17 @@ namespace TeacherMobileApp.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class WelcomePage : ContentPage
     {
-        ObservableCollection<Class> Classes;
+        WelcomeViewModel viewModel;
         public WelcomePage()
         {
             InitializeComponent();
-            BindingContext = this;
-            Classes = new ObservableCollection<Class>();
+            BindingContext = viewModel = new WelcomeViewModel();            
         }
 
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            ClassesLvw.ItemsSource = App.Classes;
-            ClassesLvw.IsVisible = (App.Classes.Count > 0);
-            NoClassesLabel.IsVisible = !ClassesLvw.IsVisible;
+            Debug.WriteLine($"CANTIDAD DE CLASES: {viewModel.Classes.Count}");
         }
 
         private async void ClassesLvw_ItemSelected(object sender, ItemTappedEventArgs e)
@@ -34,7 +32,7 @@ namespace TeacherMobileApp.Views
             ((ListView)sender).SelectedItem = null;
 
             var selectedClass = e.Item as Class;
-            await BaseViewModel.MasterDetail.Detail.Navigation.PushAsync(new TeacherProfilePage(selectedClass.Teacher));
+            await viewModel.MasterNavigateTo(new TeacherProfilePage(selectedClass.Teacher));
         }
     }
 }

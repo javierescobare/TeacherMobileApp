@@ -1,8 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:TeacherMobileApp.Helpers.Converters;assembly=TeacherMobileApp"
              x:Class="TeacherMobileApp.Views.WelcomePage"
              Title="Inicio">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <local:InverseBoolConverter x:Key="InverseBoolConverter" />
+            <local:CountToIsVisibleConverter x:Key="CountToIsVisibleConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    
     <ContentPage.Content>
         <Grid>
             <Grid.RowDefinitions>
@@ -19,9 +27,14 @@
                       HasUnevenRows="True"
                       SeparatorVisibility="None"
                       Grid.Row="1"
-                      ItemTapped="ClassesLvw_ItemSelected">
+                      ItemTapped="ClassesLvw_ItemSelected"
+                      ItemsSource="{Binding Classes}"
+                      IsVisible="{Binding Path=Classes.Count, Converter={StaticResource CountToIsVisibleConverter}}">
                 <ListView.Header>
-                    <Label Text="Próximas clases" FontFamily="{StaticResource RegularFontFamily}" Margin="16,4,16,4" FontSize="16"/>
+                    <Label Text="Próximas clases"
+                           Margin="16,4" 
+                           FontFamily="{StaticResource RegularFontFamily}" 
+                           FontSize="16"/>
                 </ListView.Header>
                 <ListView.ItemTemplate>
                     <DataTemplate>
@@ -45,7 +58,18 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-            <Label x:Name="NoClassesLabel" Text="Aún no tienes clases programadas." VerticalOptions="Center" HorizontalOptions="Center" FontSize="18" Grid.Row="1" FontFamily="{StaticResource LightFontFamily}" HorizontalTextAlignment="Center" Margin="30,0" WidthRequest="120"/>
+            <Label x:Name="NoClassesLabel" 
+                   Text="Aún no tienes clases programadas." 
+                   Grid.Row="1" 
+                   VerticalOptions="Center"
+                   HorizontalOptions="Center" 
+                   HorizontalTextAlignment="Center" 
+                   FontFamily="{StaticResource LightFontFamily}" 
+                   FontSize="18" 
+                   WidthRequest="120" 
+                   Margin="30,0" 
+                   BindingContext="{x:Reference Name=ClassesLvw}" 
+                   IsVisible="{Binding Path=IsVisible, Converter={StaticResource InverseBoolConverter}}"/>
         </Grid>
     </ContentPage.Content>
 </ContentPage>

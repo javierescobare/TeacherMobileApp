@@ -13,12 +13,14 @@ namespace TeacherMobileApp
         {
             InitializeComponent();
             
-            if (Settings.LoggedIn)
-                MainPage = new Views.ShellPage();
-            else
+            if (!Settings.LoggedIn)
+            {
                 MainPage = new Views.LoginPage();
+                return;
+            }
 
             Classes = new ObservableCollection<Class>();
+            MainPage = new Views.ShellPage();
         }
 
         protected override void OnStart()
