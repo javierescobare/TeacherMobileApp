@@ -4,6 +4,7 @@ using Plugin.Geolocator.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,9 +24,10 @@ namespace TeacherMobileApp.ViewModels
         public string CourseName { get; set; }
         public Teacher Teacher { get; set; }
         public ObservableCollection<Schedule> Schedules { get; set; }
-        public IGeolocator Locator { get; set; }
+        public IGeolocator GeoLocator { get; set; }
         public ICommand GetLocation { get; set; }
         public ICommand PickSchedules { get; set; }
+        public ICommand ProcessContract { get; set; }
         public MapPage LocationPage { get; set; }
         public SelectMultipleBasePage<Schedule> SchedulesPickerPage { get; private set; }
         public Plugin.Geolocator.Abstractions.Position LastPosition { get; set; }
@@ -33,14 +35,14 @@ namespace TeacherMobileApp.ViewModels
         private string _output;
         public string SchedulesOutput
         {
-            get { return _output; }
+            get { return GetSchedulesOutput(); }
             set { _output = value; RaisePropertyChanged(); }
         }
 
         private double _total;
         public double Total
         {
-            get { return _total; }
+            get { return CalculateTotal(); }
             set { _total = value; RaisePropertyChanged(); }
         }
 
@@ -59,33 +61,33 @@ namespace TeacherMobileApp.ViewModels
             this.Teacher = teacher;
 
             Schedules = new ObservableCollection<Schedule>();
-            SchedulesOutput = ReturnOutput();
             Schedules.CollectionChanged += Schedules_CollectionChanged;
 
-            Locator = locator;
-            GetLocation = new Command(async () => await GetUserLocation());
-            PickSchedules = new Command(async () => await SelectSchedules());
+            GeoLocator = locator;
+            GetLocation = new Command(async () => await GetUserLocationAsync());
+            PickSchedules = new Command(async () => await SelectSchedulesAsync());
+            ProcessContract = new Command(async () => await ProcessContractAsync());
             Location = DefaultLocationMessage;
         }
 
 
 
-        private void Schedules_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        private void Schedules_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            SchedulesOutput = ReturnOutput();
-            Total = CalculateTotal();
+            RaisePropertyChanged(nameof(SchedulesOutput));
+            RaisePropertyChanged(nameof(Total));
         }
 
-        private async Task GetUserLocation()
+        public async Task GetUserLocationAsync()
         {
             if (IsBusy)
                 return;
 
             IsBusy = true;
 
-            if (!Locator.IsGeolocationEnabled)
+            if (!GeoLocator.IsGeolocationEnabled)
             {
-                await App.Current.MainPage.DisplayAlert("Primero lo primero", "Debes activar tu ubicación GPS.", "OK");
+                await Application.Current.MainPage.DisplayAlert("Primero lo primero", "Debes activar tu ubicación GPS.", "OK");
                 IsBusy = false;
                 return;
             }
@@ -96,11 +98,11 @@ namespace TeacherMobileApp.ViewModels
                 {
                     UserDialogs.Instance.ShowLoading(title: "Obteniendo ubicación");
 
-                    LastPosition = await Locator.GetPositionAsync((int)TimeSpan.FromSeconds(8).TotalMilliseconds);
+                    LastPosition = await GeoLocator.GetPositionAsync((int)TimeSpan.FromSeconds(8).TotalMilliseconds);
                     if (LastPosition == null)
                     {
                         UserDialogs.Instance.HideLoading();
-                        await App.Current.MainPage.DisplayAlert("¡Ups!", "No se pudo obtener la ubicación, inténtalo nuevamente.", "OK");
+                        await Application.Current.MainPage.DisplayAlert("¡Ups!", "No se pudo obtener la ubicación, inténtalo nuevamente.", "OK");
                         Location = DefaultLocationMessage;
                         return;
                     }
@@ -132,7 +134,8 @@ namespace TeacherMobileApp.ViewModels
             try
             {
                 Location = "Ubicación establecida";
-                var addresses = await new Geocoder().GetAddressesForPositionAsync(new Xamarin.Forms.Maps.Position(latitude, longitude));
+                var position = new Xamarin.Forms.Maps.Position(latitude, longitude);
+                var addresses = await new Geocoder().GetAddressesForPositionAsync(position);
                 var address = addresses.FirstOrDefault();
                 if (address == null)
                     return;
@@ -144,7 +147,7 @@ namespace TeacherMobileApp.ViewModels
             }
         }
 
-        public async Task SelectSchedules()
+        public async Task SelectSchedulesAsync()
         {
             if (IsBusy)
                 return;
@@ -176,7 +179,7 @@ namespace TeacherMobileApp.ViewModels
             return total;
         }
 
-        private string ReturnOutput()
+        private string GetSchedulesOutput()
         {
             if (NoSchedules)
                 return "No has escogido ningún horario";
@@ -188,6 +191,30 @@ namespace TeacherMobileApp.ViewModels
                 builder.Append(", ");
             }
             return builder.ToString(0, builder.Length -2);
+        }
+
+        public async Task ProcessContractAsync()
+        {
+            if (NoSchedules)
+            {
+                await Application.Current.MainPage.DisplayAlert(
+                    "Un momento", 
+                    "Debes seleccionar por lo menos un horario para la atención.", 
+                    "OK");
+                return;
+            }
+
+            var accepted = await Application.Current.MainPage.DisplayAlert(
+                    "Atención", 
+                    "¿Estás seguro de proceder con la solicitud?", 
+                    "Sí", "Cancelar");
+            if (!accepted)
+                return;
+
+            Teacher.Unemployed = false;
+            App.Classes.Add(new Class() { CourseName = Course.Name, Teacher = Teacher, Schedules = SchedulesOutput });
+
+            NavigateToPageCurrent(new ShellPage());
         }
 
         public bool NoSchedules

@@ -13,6 +13,7 @@ namespace TeacherMobileApp.Views
     {
         public byte[] MapImage { get; private set; }
         public Pin MyPositionPin { get; private set; }
+
         private ExtendedMap _map;
         private Button _acceptBtn;
 

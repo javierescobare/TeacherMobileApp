@@ -53,19 +53,6 @@
                 <Setter Property="FontFamily" Value="{StaticResource RegularFontFamily}" />
             </Style>
 
-            <Style x:Key="StatsNumberLabel" TargetType="Label">
-                <Setter Property="FontFamily" Value="{StaticResource MediumFontFamily}" />
-                <Setter Property="TextColor" Value="{StaticResource HeaderTextColor}" />
-                <Setter Property="HorizontalTextAlignment" Value="Center" />
-                <Setter Property="FontSize" Value="{StaticResource StatsNumberFontSize}" />
-            </Style>
-
-            <Style x:Key="StatsCaptionLabel" TargetType="Label">
-                <Setter Property="TextColor" Value="{StaticResource BodyTextColor}" />
-                <Setter Property="HorizontalTextAlignment" Value="Center" />
-                <Setter Property="FontSize" Value="{StaticResource StatsCaptionFontSize}" />
-            </Style>
-
             <Style x:Key="SimpleLineListItem" TargetType="Label">
                 <Setter Property="VerticalOptions" Value="Center" />
                 <Setter Property="FontSize" Value="16" />

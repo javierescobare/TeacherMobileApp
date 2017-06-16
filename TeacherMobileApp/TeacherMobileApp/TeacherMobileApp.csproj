@@ -40,6 +40,8 @@
     </Compile>
     <Compile Include="Controls\ExtendedMap.cs" />
     <Compile Include="Controls\PDFViewer.cs" />
+    <Compile Include="Helpers\Converters\CountToIsVisibleConverter.cs" />
+    <Compile Include="Helpers\Converters\InverseBoolConverter.cs" />
     <Compile Include="Helpers\SelectMultipleBasePage.cs" />
     <Compile Include="Helpers\Settings.cs" />
     <Compile Include="Models\Class.cs" />
@@ -53,6 +55,7 @@
     <Compile Include="ViewModels\ContractTeacherViewModel.cs" />
     <Compile Include="ViewModels\CoursesViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
+    <Compile Include="ViewModels\WelcomeViewModel.cs" />
     <Compile Include="Views\AvailableTeachersPage.xaml.cs">
       <DependentUpon>AvailableTeachersPage.xaml</DependentUpon>
     </Compile>

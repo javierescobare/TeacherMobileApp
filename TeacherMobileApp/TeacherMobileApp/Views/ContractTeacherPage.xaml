@@ -73,7 +73,7 @@
                            HorizontalTextAlignment="End"/>
                     
                     <Button Text="Aceptar" 
-                            Clicked="NextClick" 
+                            Command="{Binding ProcessContract}"
                             BackgroundColor="{StaticResource colorPrimary}"
                             TextColor="White"
                             Margin="0,12,0,0"/>
