@@ -41,7 +41,7 @@ namespace TeacherMobileApp.ViewModels
 
                 if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
                 {
-                    await App.Current.MainPage.DisplayAlert(
+                    await Application.Current.MainPage.DisplayAlert(
                         "¡Ups! Se te olvidó algo",
                         "Al parecer has dejado algún campo incompleto, por favor, verifica los datos que ingresaste.",
                         "OK");

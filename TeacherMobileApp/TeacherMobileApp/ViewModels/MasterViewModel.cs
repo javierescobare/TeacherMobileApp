@@ -31,7 +31,7 @@ namespace TeacherMobileApp.ViewModels
         {
             MasterDetail.IsPresented = false;
 
-            var shouldClose = await App.Current.MainPage.DisplayAlert(
+            var shouldClose = await Application.Current.MainPage.DisplayAlert(
                 "Cerrar sesión",
                 "¿Estás seguro que deseas cerrar sesión?",
                 "OK", "Cancelar");

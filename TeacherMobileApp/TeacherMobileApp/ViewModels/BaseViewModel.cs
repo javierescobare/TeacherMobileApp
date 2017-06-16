@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
@@ -21,14 +17,14 @@ namespace TeacherMobileApp.ViewModels
         public bool IsBusy
         {
             get { return _isBusy; }
-            set { _isBusy = value; RaisePropertyChanged("IsBusy"); }
+            set { _isBusy = value; RaisePropertyChanged(); }
         }
 
         private string _title;
         public string Title
         {
             get { return _title; }
-            set { _title = value; RaisePropertyChanged("Title"); }
+            set { _title = value; RaisePropertyChanged(); }
         }
 
         protected virtual void RaisePropertyChanged([CallerMemberName] string propertyName = null)

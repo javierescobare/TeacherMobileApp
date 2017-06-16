@@ -35,14 +35,14 @@ namespace TeacherMobileApp.ViewModels
         private string _output;
         public string SchedulesOutput
         {
-            get { return _output; }
+            get { return GetSchedulesOutput(); }
             set { _output = value; RaisePropertyChanged(); }
         }
 
         private double _total;
         public double Total
         {
-            get { return _total; }
+            get { return CalculateTotal(); }
             set { _total = value; RaisePropertyChanged(); }
         }
 
@@ -61,7 +61,6 @@ namespace TeacherMobileApp.ViewModels
             this.Teacher = teacher;
 
             Schedules = new ObservableCollection<Schedule>();
-            SchedulesOutput = GetSchedulesOutput();
             Schedules.CollectionChanged += Schedules_CollectionChanged;
 
             GeoLocator = locator;
@@ -75,11 +74,11 @@ namespace TeacherMobileApp.ViewModels
 
         private void Schedules_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            SchedulesOutput = GetSchedulesOutput();
-            Total = CalculateTotal();
+            RaisePropertyChanged(nameof(SchedulesOutput));
+            RaisePropertyChanged(nameof(Total));
         }
 
-        private async Task GetUserLocationAsync()
+        public async Task GetUserLocationAsync()
         {
             if (IsBusy)
                 return;
@@ -88,7 +87,7 @@ namespace TeacherMobileApp.ViewModels
 
             if (!GeoLocator.IsGeolocationEnabled)
             {
-                await App.Current.MainPage.DisplayAlert("Primero lo primero", "Debes activar tu ubicación GPS.", "OK");
+                await Application.Current.MainPage.DisplayAlert("Primero lo primero", "Debes activar tu ubicación GPS.", "OK");
                 IsBusy = false;
                 return;
             }
@@ -103,7 +102,7 @@ namespace TeacherMobileApp.ViewModels
                     if (LastPosition == null)
                     {
                         UserDialogs.Instance.HideLoading();
-                        await App.Current.MainPage.DisplayAlert("¡Ups!", "No se pudo obtener la ubicación, inténtalo nuevamente.", "OK");
+                        await Application.Current.MainPage.DisplayAlert("¡Ups!", "No se pudo obtener la ubicación, inténtalo nuevamente.", "OK");
                         Location = DefaultLocationMessage;
                         return;
                     }
@@ -194,23 +193,18 @@ namespace TeacherMobileApp.ViewModels
             return builder.ToString(0, builder.Length -2);
         }
 
-        public bool NoSchedules
-        {
-            get { return Schedules.Count == 0; }
-        }
-
-        private async Task ProcessContractAsync()
+        public async Task ProcessContractAsync()
         {
             if (NoSchedules)
             {
-                await App.Current.MainPage.DisplayAlert(
+                await Application.Current.MainPage.DisplayAlert(
                     "Un momento", 
                     "Debes seleccionar por lo menos un horario para la atención.", 
                     "OK");
                 return;
             }
 
-            var accepted = await App.Current.MainPage.DisplayAlert(
+            var accepted = await Application.Current.MainPage.DisplayAlert(
                     "Atención", 
                     "¿Estás seguro de proceder con la solicitud?", 
                     "Sí", "Cancelar");
@@ -221,6 +215,11 @@ namespace TeacherMobileApp.ViewModels
             App.Classes.Add(new Class() { CourseName = Course.Name, Teacher = Teacher, Schedules = SchedulesOutput });
 
             NavigateToPageCurrent(new ShellPage());
+        }
+
+        public bool NoSchedules
+        {
+            get { return Schedules.Count == 0; }
         }
     }
 }
